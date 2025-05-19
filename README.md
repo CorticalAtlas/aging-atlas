@@ -1,7 +1,12 @@
 # Cortical-Aging-Atlas
 A surface area aging atlas for healthy middle-aged and elderly populations
 
-We constructed a surface area-based brain aging atlas using healthy middle-aged and elderly control data from the ADNI（https://ida.loni.usc.edu/pages/access/search.jsp?tab=collection&project=ADNI&page=DOWNLOADS&subPage=IMAGE_COLLECTIONS） dataset, employing non-negative matrix factorization constrained by cortical surface topology. This methodology enabled the identification of three distinct cortical atrophy subtypes through advanced pattern decomposition.
+We constructed a healthy aging atlas using only healthy control group data from the Alzheimer's Disease Neuroimaging Initiative ADNI（https://ida.loni.usc.edu/pages/access/search.jsp?tab=collection&project=ADNI&page=DOWNLOADS&subPage=IMAGE_COLLECTIONS）, comprising 1,016 longitudinal scans (male: 76.94 ± 6.59 years; female: 76.73 ± 6.39 years) to establish a baseline for healthy aging. T1-weighted MRI scans were preprocessed using FreeSurfer's standard pipeline for cortical surface reconstruction, and the resulting data were concatenated to generate a surface area matrix V. Under the Riemannian manifold framework, the cortical surface was modeled as a triangular mesh manifold M. The topological connections between cortical vertices were encoded using a graph Laplacian operator. A two-stage Non-negative Matrix Factorization (NMF) architecture was employed:
+```plaintext
+Stage 1: Standard NMF was applied to obtain an initial basis matrix W⁽⁰⁾ and coefficient matrix H⁽⁰⁾, ensuring sparsity without topological constraints.
+Stage 2: With H⁽⁰⁾ fixed, the basis matrix W⁽⁰⁾ was fine-tuned to promote similarity in factor expressions between adjacent cortical vertices.
+```
+This study aims to build a normative atlas of healthy brain aging, providing a reference baseline for evaluating aging rates in healthy individuals and supporting clinical diagnosis.
 
 Hierarchical
 ```plaintext
@@ -45,7 +50,7 @@ python mask_modalities.py
 3、Run NMF.
 (1) Process single hemisphere
 ```Python
-python spatial_nmf.py --hemi lh
+python SpatiallyRegularizedNMF.py --hemi lh
 ```
 (2) Process bilateral hemispheres (default)
 ```Python
