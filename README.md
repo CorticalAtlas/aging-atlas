@@ -60,6 +60,13 @@ python SpatiallyRegularizedNMF.py
 ## Atlas
 ![atlas](https://github.com/user-attachments/assets/a0ca5201-914d-4f55-ba82-11629476b1d8)
 
+## The original NMF results
+![Uploading NMF.jpg…]()
+
+## Different λ results
+![Uploading λ.jpg…]()
+
+
 ## Atrophy subtypes
 ![atrophy subtypes](https://github.com/user-attachments/assets/0a951efa-3be1-4bf5-9667-ec57aaad2283)
 
