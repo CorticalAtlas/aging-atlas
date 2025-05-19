@@ -14,8 +14,8 @@ Aging Atlas/
 ├── SpatiallyRegularizedNMF.py
 ├── requirements.txt
 ├── CN/
-│   ├── lh_area.mgh # LH area matrix
-│   ├── rh_area.mgh # RH area matrix
+│   ├── lh_area.mgh # input LH area matrix
+│   ├── rh_area.mgh # input RH area matrix
 │   ├── lh_V.npy
 │   ├── rh_V.npy
 │   ├── lh_filtered.npy
