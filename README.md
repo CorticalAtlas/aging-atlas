@@ -32,7 +32,7 @@ Aging Atlas/
     └── . . .
 ```
 
-## Quick star
+## Quick start
 # Install dependencies
 ```bash
    pip install -r requirements.txt
