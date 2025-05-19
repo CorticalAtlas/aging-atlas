@@ -47,7 +47,7 @@ python read_modalities.py
 ```Python
 python mask_modalities.py
 ```
-3、Run NMF.
+3、Run Spatially Regularized NMF.
 (1) Process single hemisphere
 ```Python
 python SpatiallyRegularizedNMF.py --hemi lh
