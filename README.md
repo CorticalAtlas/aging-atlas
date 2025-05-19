@@ -5,7 +5,7 @@ A surface area aging atlas for healthy middle-aged and elderly populations
 ## Atlas
 ![atlas](https://github.com/user-attachments/assets/a0ca5201-914d-4f55-ba82-11629476b1d8)
 
-##The original NMF results
+## The original NMF results
 ![NMF](https://github.com/user-attachments/assets/2969ff90-f7ae-4c66-8bf4-459d005094b6)
 
 ## Different λ results
