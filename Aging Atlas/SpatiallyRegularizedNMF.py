@@ -33,25 +33,32 @@ def validate_paths():
         if not os.path.exists(path):
             raise FileNotFoundError(f"Required path not found: {path}")
 
-def spatially_regularized_nmf(V, components, adjacency_matrix, initial_lambda_reg=0.05, max_iter=10000):
+def spatially_regularized_nmf(V, components, adjacency_matrix, L, initial_lambda_reg, iternum, random_state):
     scaler = MinMaxScaler()
     V_normalized = scaler.fit_transform(V)
 
-    model = NMF(n_components=components, init='nndsvdar', solver='mu', max_iter=max_iter)
+    model = NMF(n_components=components, init='nndsvdar', solver='mu', max_iter=iternum, random_state=random_state)
     W = model.fit_transform(V_normalized)
     H = model.components_
 
-    L = csgraph.laplacian(adjacency_matrix, normed=True)
+    reconstruction_error = model.reconstruction_err_
+        
     lambda_reg = initial_lambda_reg
 
-    for _ in range(max_iter):
-        reconstruction_error = np.linalg.norm(V_normalized - W @ H)
-        W -= lambda_reg * (L @ W)
-        new_error = np.linalg.norm(V_normalized - W @ H)
+    for iteration in range(iternum):
+        W -= lambda_reg * np.dot(L, W)  
         
-        if new_error < 1e-6:
-            break
+        negative_count = np.sum(W < 0)
+        if negative_count > 0:
+            negative_percentage = negative_count / W.size * 100
+            W[W < 0] = 0 
+        V_approx = np.dot(W, H)
 
+        new_error = np.linalg.norm(V_normalized - V_approx)
+        
+        if abs(reconstruction_error - new_error) < 1e-6:
+            break
+        reconstruction_error = new_error
     return W, H, reconstruction_error
 
 def build_adjacency_matrix(surf_file, mask):
@@ -71,7 +78,7 @@ def build_adjacency_matrix(surf_file, mask):
                 
     return adjacency
 
-def process_hemisphere(hemi):
+def process_hemisphere(hemi,seeds):
     print(f'Processing {hemi.upper()} hemisphere')
     
     input_dir = Config.DATA_DIR
@@ -80,25 +87,58 @@ def process_hemisphere(hemi):
     
     surf_path = os.path.join(Config.FREESURFER_HOME, 'subjects/fsaverage6/surf', f'{hemi}.pial')
     adjacency_matrix = build_adjacency_matrix(surf_path, mask)
+    L = csgraph.laplacian(adjacency_matrix, normed=True)
     
     results = []
     output_dir = Config.OUTPUT_DIR
     os.makedirs(output_dir, exist_ok=True)
 
     for n_components in range(2, 21):
-        print(f'Processing {n_components} components')
-        W, H, error = spatially_regularized_nmf(V, n_components, adjacency_matrix)
+        all_labels = []  
+        all_W = []      
+        silhouette_scores = [] 
+        reconstruction_errors = [] 
+
+        for seed in seeds:                
+            W, H, reconstruction_error = spatially_regularized_nmf(
+                    V, n_components, adjacency_matrix, L, 
+                    initial_lambda_reg=0.05, iternum=10000, random_state=seed) 
+            kmeans = KMeans(n_clusters=n_components, random_state=seed, init='k-means++').fit(W)
+            labels = kmeans.labels_
+
+            all_labels.append(labels)
+            all_W.append(W)
+            reconstruction_errors.append(reconstruction_error)
+            if n_components > 1:
+                silhouette_avg = silhouette_score(W, labels)
+                silhouette_scores.append(silhouette_avg)
+            else:
+                silhouette_scores.append(np.nan)
+                
+        if n_components > 1:
+            best_idx = np.argmax(silhouette_scores)
+            best_silhouette = silhouette_scores[best_idx]
+            best_reconstruction_error = reconstruction_errors[best_idx]
+            final_labels = all_labels[best_idx]
+            best_seed = seeds[best_idx]
+        else:
+            best_silhouette = np.nan
+            best_reconstruction_error = reconstruction_errors[0]
+            final_labels = all_labels[0]
+            best_seed = seeds[0]
+            
+        avg_silhouette = np.mean([s for s in silhouette_scores if not np.isnan(s)]) if n_components > 1 else np.nan
+        avg_reconstruction_error = np.mean(reconstruction_errors)
         
-        kmeans = KMeans(n_clusters=n_components, random_state=0).fit(W)
-        labels = kmeans.labels_
-        silhouette = silhouette_score(W, labels) if n_components > 1 else np.nan
-        
-        save_cluster_annot(labels, mask, output_dir, hemi, n_components)
+        save_cluster_annot(final_labels, mask, output_dir, hemi, n_components)
         results.append({
-            'n_components': n_components,
-            'reconstruction_error': error,
-            'silhouette_score': silhouette
-        })
+                'n_components': n_components,
+                'reconstruction_error': avg_reconstruction_error,
+                'silhouette_score': avg_silhouette,
+                'best_silhouette': best_silhouette,
+                'best_reconstruction_error': best_reconstruction_error,
+                'best_seed': best_seed
+            })
     
     save_metrics(results, output_dir, hemi)
     generate_plots(results, output_dir, hemi)
@@ -164,9 +204,11 @@ if __name__ == '__main__':
         start_time = time.time()
         
         hemispheres = ['lh', 'rh'] if args.hemi == 'both' else [args.hemi]
+
+        seeds = [2, 17, 41, 67, 97]
         
         for hemi in hemispheres:
-            process_hemisphere(hemi)
+            process_hemisphere(hemi,seeds)
         
         print(f'Total processing time: {time.time()-start_time:.2f} seconds')
     
