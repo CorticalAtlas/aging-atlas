@@ -3,7 +3,8 @@ A surface area aging atlas for healthy middle-aged and elderly populations
 
 
 ## Atlas
-![atlas](https://github.com/user-attachments/assets/a0ca5201-914d-4f55-ba82-11629476b1d8)
+![Git_atlas](https://github.com/user-attachments/assets/8b015ec0-dc41-448d-a47f-2a6aea4a5537)
+
 
 ## The original NMF results
 ![NMF](https://github.com/user-attachments/assets/2969ff90-f7ae-4c66-8bf4-459d005094b6)
@@ -13,10 +14,11 @@ A surface area aging atlas for healthy middle-aged and elderly populations
 
 
 ## Atrophy subtypes
-![atrophy subtypes](https://github.com/user-attachments/assets/0a951efa-3be1-4bf5-9667-ec57aaad2283)
+![Git_atrophy](https://github.com/user-attachments/assets/0b78838b-f7d9-4767-8b06-67d45699a89a)
 
 
-We constructed a healthy aging atlas using only healthy control group data from the Alzheimer's Disease Neuroimaging Initiative ADNI（https://ida.loni.usc.edu/pages/access/search.jsp?tab=collection&project=ADNI&page=DOWNLOADS&subPage=IMAGE_COLLECTIONS）, comprising 1,016 longitudinal scans (male: 76.94 ± 6.59 years; female: 76.73 ± 6.39 years) to establish a baseline for healthy aging. T1-weighted MRI scans were preprocessed using FreeSurfer's standard pipeline for cortical surface reconstruction, and the resulting data were concatenated to generate a surface area matrix V. Under the Riemannian manifold framework, the cortical surface was modeled as a triangular mesh manifold M. The topological connections between cortical vertices were encoded using a graph Laplacian operator. A two-stage Non-negative Matrix Factorization (NMF) architecture was employed:
+
+We constructed a healthy aging atlas using only healthy control group data from the Alzheimer's Disease Neuroimaging Initiative ADNI（https://ida.loni.usc.edu/pages/access/search.jsp?tab=collection&project=ADNI&page=DOWNLOADS&subPage=IMAGE_COLLECTIONS）, comprising 1,069 longitudinal scans (male: 76.94 ± 6.59 years; female: 76.73 ± 6.39 years) to establish a baseline for healthy aging. T1-weighted MR scans were preprocessed using FreeSurfer's standard pipeline for cortical surface reconstruction, and the resulting data were concatenated to generate a surface area matrix V. Under the Riemannian manifold framework, the cortical surface was modeled as a triangular mesh manifold M. The topological connections between cortical vertices were encoded using a graph Laplacian operator. A two-stage Non-negative Matrix Factorization (NMF) architecture was employed:
 ```plaintext
 Stage 1: Standard NMF was applied to obtain an initial basis matrix W⁽⁰⁾ and coefficient matrix H⁽⁰⁾, ensuring sparsity without topological constraints.
 Stage 2: With H⁽⁰⁾ fixed, the basis matrix W⁽⁰⁾ was fine-tuned to promote similarity in factor expressions between adjacent cortical vertices.
