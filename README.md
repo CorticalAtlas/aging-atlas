@@ -3,22 +3,19 @@ A surface area aging atlas for healthy middle-aged and elderly populations
 
 
 ## Atlas
-![Git_atlas](https://github.com/user-attachments/assets/8b015ec0-dc41-448d-a47f-2a6aea4a5537)
+<img width="2458" height="950" alt="atlas" src="https://github.com/user-attachments/assets/7af89730-acf7-42a5-bf82-2d2387fb5d56" />
 
 
-## The original NMF results
-![NMF](https://github.com/user-attachments/assets/2969ff90-f7ae-4c66-8bf4-459d005094b6)
-
-## Different λ results
-![λ](https://github.com/user-attachments/assets/a36b8b8a-0103-43d8-9808-f12374543104)
+## Different methods results
+<img width="2778" height="1824" alt="different methods" src="https://github.com/user-attachments/assets/1c862342-687a-438c-a097-5420214c583c" />
 
 
 ## Atrophy subtypes
-![Git_atrophy](https://github.com/user-attachments/assets/0b78838b-f7d9-4767-8b06-67d45699a89a)
+<img width="1818" height="520" alt="subtypes" src="https://github.com/user-attachments/assets/85bfc984-c153-4476-8f0d-994b9ef4de6f" />
 
 
 
-We constructed a healthy aging atlas using only healthy control group data from the Alzheimer's Disease Neuroimaging Initiative ADNI（https://ida.loni.usc.edu/pages/access/search.jsp?tab=collection&project=ADNI&page=DOWNLOADS&subPage=IMAGE_COLLECTIONS）, comprising 1,069 longitudinal scans (male: 76.94 ± 6.59 years; female: 76.73 ± 6.39 years) to establish a baseline for healthy aging. T1-weighted MR scans were preprocessed using FreeSurfer's standard pipeline for cortical surface reconstruction, and the resulting data were concatenated to generate a surface area matrix V. Under the Riemannian manifold framework, the cortical surface was modeled as a triangular mesh manifold M. The topological connections between cortical vertices were encoded using a graph Laplacian operator. A two-stage Non-negative Matrix Factorization (NMF) architecture was employed:
+We constructed a healthy aging atlas using only healthy control group data from the Alzheimer's Disease Neuroimaging Initiative ADNI（https://ida.loni.usc.edu/pages/access/search.jsp?tab=collection&project=ADNI&page=DOWNLOADS&subPage=IMAGE_COLLECTIONS）, comprising 1,066 longitudinal scans (male: 76.36 ± 6.78 years; female: 75.36 ± 6.98 years) to establish a baseline for healthy aging. T1-weighted MR scans were preprocessed using FreeSurfer's standard pipeline for cortical surface reconstruction, and the resulting data were concatenated to generate a surface area matrix V. Under the Riemannian manifold framework, the cortical surface was modeled as a triangular mesh manifold M. The topological connections between cortical vertices were encoded using a graph Laplacian operator. A two-stage Non-negative Matrix Factorization (NMF) architecture was employed:
 ```plaintext
 Stage 1: Standard NMF was applied to obtain an initial basis matrix W⁽⁰⁾ and coefficient matrix H⁽⁰⁾, ensuring sparsity without topological constraints.
 Stage 2: With H⁽⁰⁾ fixed, the basis matrix W⁽⁰⁾ was fine-tuned to promote similarity in factor expressions between adjacent cortical vertices.
@@ -40,12 +37,11 @@ Aging Atlas/
 │   ├── rh_filtered.npy
 │   └── rh_mask.npy
 └── atlas/
-│   ├── nmf_clusters_lh_17.annot
-│   └── nmf_clusters_rh_17.annot
+│   ├── nmf_clusters_lh_16.annot
+│   └── nmf_clusters_rh_16.annot
 └── results/
     ├── nmf_clusters_lh_2.annot
     ├── nmf_clusters_lh_3.annot
-    ├── analysis_lh.png
     └── . . .
 ```
 
